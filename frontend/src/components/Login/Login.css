@@ -1,0 +1,13 @@
+input {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 0;
+}
+
+.loginForm {
+   margin: 50% 15% 0 15%;
+}
