@@ -1,10 +1,16 @@
-import { LOGIN_SUCCESSFUL, LOGIN_FAILURE, FETCH_AUTH } from "./loginType";
-
+import {
+  LOGIN_SUCCESSFUL,
+  LOGIN_FAILURE,
+  FETCH_AUTH,
+  CHANGE_PASSWORD_FIELD,
+  CHANGE_EMAIL_FIELD
+} from "./loginType";
 
 const initialState = {
   checkingAuth: false,
-  username: "testing 1 2 3, test 1 2 3",
   error: "",
+  emailField: '',
+  passwordField: '',
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -12,19 +18,30 @@ const loginReducer = (state = initialState, action) => {
     case FETCH_AUTH:
       return {
         ...state,
-        loading: true,
+        checkingAuth: true,
       };
     case LOGIN_SUCCESSFUL:
       return {
         ...state,
-        loading: false,
-        username: action.payload.email,
+        checkingAuth: false,
+        emailField: action.payload.email,
       };
     case LOGIN_FAILURE:
       return {
-        loading: false,
+        checkingAuth: false,
         error: action.payload,
-        username: "",
+        emailField: "",
+        passwordField: "",
+      };
+    case CHANGE_PASSWORD_FIELD:
+      return {
+        ...state,
+        passwordField: action.payload,
+      };
+    case CHANGE_EMAIL_FIELD:
+      return {
+        ...state,
+        emailField: action.payload,
       };
     default:
       return state;

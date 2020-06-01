@@ -1,26 +1,33 @@
 import React from "react";
-import {connect} from 'react-redux'
-import '../Login/Login.css'
-import axios from 'axios'
-import {loginSuccessful, fetchUserRequest, loginFailure} from '../../redux/login/loginAction'
+import { connect } from "react-redux";
+import "../Login/Login.css";
+import {
+  loginSuccessfulAction,
+  fetchUserRequestAction,
+  loginFailureAction,
+  changePasswordAction,
+  changeEmailAction
+} from "../../redux/login/loginAction";
 
+function Login({email, checkingAuth, error, password, fetchUser, loginSuccessful, loginFailure, setEmail, setPassword}) {
 
-function Login({username="", checkingAuth, error, dispatch}) {
-
-  const fetchAuth = () => {
-    return function() {
-      dispatch(fetchUserRequest())
-      axios.get('/user/api/login')
-        .then(response => {
-          const user = response.data.user
-          dispatch(loginSuccessful(user))
-          // username
-        }).catch( error =>{
-          dispatch(loginFailure(error.message))
-          // return error
-        })
-    }
-  }
+  // const fetchAuth = ({dispatch}) => {
+  //   return function () {
+  //     const apibaseURL = "http://localhost:8080/user/api/login";
+  //     dispatch(fetchUserRequest());
+  //     axios
+  //       .post(`${apibaseURL}?email=${email}&password=${password}`)
+  //       .then((response) => {
+  //         const user = response.data.user;
+  //         dispatch(loginSuccessful(user));
+  //         // username
+  //       })
+  //       .catch((error) => {
+  //         dispatch(loginFailure(error.message));
+  //         // return error
+  //       });
+  //   };
+  // };
 
   return (
     <div className="container">
@@ -29,20 +36,23 @@ function Login({username="", checkingAuth, error, dispatch}) {
           <h1>This is the Login</h1>
           <form className="loginForm">
             <label>Login</label>
-            <input 
-              type="text"
+            <input
+              type="email"
               placeholder="Enter Email Address or Username"
+              value={email}
+              onChange={setEmail}
               required
             />
             <label>Password</label>
-            <input 
+            <input
               type="password"
               placeholder="Enter Password"
+              value={password}
+              onChange={setPassword}
               required
             />
             <button type="Submit">Login</button>
           </form>
-          
         </div>
       </div>
     </div>
@@ -50,12 +60,23 @@ function Login({username="", checkingAuth, error, dispatch}) {
 }
 
 const mapStateToProps = (state) => {
-  const {username, checkingAuth, error} = state.login
+  const {emailField, checkingAuth, error, passwordField} = state.login;
   return {
-    username: username,
+    email: emailField,
     checkingAuth: checkingAuth,
-    error: error
+    error: error,
+    password: passwordField
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchUser: fetchUserRequestAction,
+    loginSuccessful: loginSuccessfulAction,
+    loginFailure: loginFailureAction,
+    setPassword: (e) => dispatch(changePasswordAction(e)),
+    setEmail: (e) => dispatch(changeEmailAction(e))
   }
 }
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
